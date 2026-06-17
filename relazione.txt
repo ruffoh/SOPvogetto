@@ -1,0 +1,18 @@
+Autori: Ruffoni Giacomo, Matr. Numero 0000000
+
+Descrizione del progetto:
+Il programma parafilter è un comando di sistema sviluppato in C (standard POSIX) che ricerca una stringa (keyword) all'interno di uno o più file, elaborandoli in parallelo.
+
+Scelte progettuali:
+
+    Parallelismo: Per ogni file fornito come argomento, il processo padre genera un processo figlio tramite fork(). In questo modo, l'analisi dei file avviene simultaneamente, massimizzando l'efficienza.
+
+    Comunicazione (IPC): Ogni figlio comunica con il padre tramite una pipe anonima dedicata. Il figlio scrive le righe trovate sul canale di scrittura, mentre il padre legge dai canali di lettura per stampare i risultati su stdout. Vengono chiuse le pipe non necessarie per evitare conflitti.
+
+    Nota sull'I/O: Si è scelta una lettura sequenziale delle pipe per garantire l'ordine dei risultati e la stabilità del protocollo di comunicazione, assicurando che ogni canale venga svuotato correttamente.Vengono chiuse le pipe non necessarie per evitare conflitti.
+
+    Gestione Risorse e Deadlock: Per prevenire situazioni di deadlock, ogni processo chiude rigorosamente le estremità delle pipe non utilizzate. In particolare, il padre chiude tutti i descrittori di scrittura prima di avviare la fase di ricezione, permettendo così ai figli di terminare correttamente e segnalare l'EOF.
+
+    Gestione Errori: È stato implementato il supporto al flag opzionale -e tramite la system call dup2(). Se specificato, lo stderr viene rediretto su un file di log, separando in modo netto gli errori di sistema (es. file non accessibili) dall'output dei risultati della ricerca.
+
+    Buffer: Per la lettura dei file è stata utilizzata getline(), garantendo la gestione di righe di lunghezza arbitraria senza rischi di overflow. Per la comunicazione IPC tra i processi, è stato utilizzato un buffer di 8192 byte, scelto per ottimizzare le operazioni di lettura/scrittura rispetto alla dimensione delle pagine di memoria del sistema.
