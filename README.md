@@ -453,7 +453,7 @@ Questo progetto è distribuito sotto licenza **MIT**. Vedi [LICENSE](./LICENSE) 
 ```
 MIT License
 
-Copyright (c) 2024 Giacomo Ruffoni (Matr. 00000)
+Copyright (c) 2026 Giacomo Ruffoni (Matr. 00000)
 
 Permission is hereby granted, free of charge...
 ```
